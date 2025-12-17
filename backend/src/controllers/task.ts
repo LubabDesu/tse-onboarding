@@ -55,6 +55,12 @@ type CreateTaskBody = {
   isChecked?: boolean;
 };
 
+type UpdateTaskBody = {
+  title: string;
+  description?: string;
+  isChecked?: boolean;
+};
+
 export const createTask: RequestHandler = async (req, res, next) => {
   // extract any errors that were found by the validator
   const errors = validationResult(req);
@@ -86,6 +92,28 @@ export const removeTask: RequestHandler = async (req, res, next) => {
     const result = await TaskModel.deleteOne({ _id: id });
 
     res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateTask: RequestHandler = async (req, res, next) => {
+  const errors = validationResult(req);
+  const { title, description, isChecked } = req.body as UpdateTaskBody;
+  const { id } = req.params;
+  try {
+    // your code here
+    validationErrorParser(errors);
+    const task = await TaskModel.findByIdAndUpdate(
+      id,
+      { title, description, isChecked },
+      { new: true, runValidators: true },
+    );
+
+    if (task === null) {
+      throw createHttpError(404, "Task not found.");
+    }
+    res.status(200).json(task);
   } catch (error) {
     next(error);
   }

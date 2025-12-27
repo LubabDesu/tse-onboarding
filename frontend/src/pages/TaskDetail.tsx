@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getTask } from "src/api/tasks";
-import { Page, TaskForm } from "src/components";
+import { Page } from "src/components";
 
 import styles from "./TaskDetail.module.css";
 
@@ -67,7 +67,7 @@ export function TaskDetail() {
           <div className={styles.infoRow}>
             <span className={styles.label}>Assignee</span>
             <div className={styles.value}>
-              {task.assignee ? task.assignee.name : <em>Unassigned</em>}
+              {task.assignee ? task.assignee : <em>Unassigned</em>}
             </div>
           </div>
 

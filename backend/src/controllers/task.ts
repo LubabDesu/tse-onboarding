@@ -4,11 +4,11 @@
 
 import { validationResult } from "express-validator";
 import createHttpError from "http-errors";
+import { StringExpression } from "mongoose";
 import TaskModel from "src/models/task";
 import validationErrorParser from "src/util/validationErrorParser";
 
 import type { RequestHandler } from "express";
-import { StringExpression } from "mongoose";
 
 /**
  * This is an example of an Express API request handler. We'll tell Express to
@@ -128,6 +128,7 @@ export const updateTask: RequestHandler = async (req, res, next) => {
 
     res.status(200).json(updatedTask);
   } catch (error) {
+    // This block is required to resolve the "catch expected" error
     next(error);
   }
 };

@@ -1,0 +1,93 @@
+/* frontend/src/pages/TaskDetail.module.css */
+
+.pageContainer {
+  padding: 2rem;
+  color: #fff;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.backLink {
+  display: inline-block;
+  margin-bottom: 2rem;
+  color: #646cff; /* Or your theme's link color */
+  text-decoration: none;
+}
+
+.backLink:hover {
+  text-decoration: underline;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.editButton {
+  background-color: #ffc107; /* Figma Yellow/Orange */
+  color: #000;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.editButton:hover {
+  background-color: #e0a800;
+}
+
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.infoRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.9rem;
+  color: #888; /* Dimmer text for labels */
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.value {
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.statusDone {
+  color: #4caf50; /* Green for done */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.statusTodo {
+  color: #ffc107; /* Yellow/Orange for Todo */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.notFoundContainer {
+  text-align: center;
+  margin-top: 4rem;
+}

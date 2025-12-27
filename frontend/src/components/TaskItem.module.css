@@ -10,22 +10,14 @@
 .textContainer {
   height: 100%;
   border-bottom: 1px solid var(--color-text-secondary);
-
-  /* Fill remaining horizontal space */
   flex-grow: 1;
-
   display: flex;
-  /* Stack title and description vertically */
   flex-direction: column;
-  /* Center the text vertically within the row */
   justify-content: center;
-  /* Stretch to fill width so text-overflow works */
-  align-items: stretch;
-
+  align-items: flex-start;
   overflow: hidden;
 }
 
-/* Handles text truncation with "..." */
 .textContainer span {
   width: 100%;
   white-space: nowrap;
@@ -38,10 +30,9 @@
 }
 
 .description {
-  font: var(--font-body);
+  front: var(--font-label);
 }
 
-/* Applied when task is checked */
 .checked {
   color: var(--color-text-secondary);
 }

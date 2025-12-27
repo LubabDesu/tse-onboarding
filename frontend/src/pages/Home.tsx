@@ -12,7 +12,7 @@ export function Home() {
         <Link to="/about">About this app</Link>
       </p>
       <TaskForm mode="create" />
-      <TaskList title="All tasks" />
+      <TaskList title="All Tasks" />
     </Page>
   );
 }

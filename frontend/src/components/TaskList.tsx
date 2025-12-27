@@ -1,3 +1,4 @@
+import { Dialog } from "@tritonse/tse-constellation";
 import React, { useEffect, useState } from "react";
 import { getAllTasks, type Task } from "src/api/tasks";
 import { TaskItem } from "src/components";
@@ -9,27 +10,49 @@ export type TaskListProps = {
 
 export function TaskList({ title }: TaskListProps) {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [errorModalMessage, setErrorModalMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    void getAllTasks().then((result) => {
-      if (result.success) {
-        setTasks(result.data);
+    async function loadTasks() {
+      const results = await getAllTasks();
+      if (results.success) {
+        setTasks(results.data);
       } else {
-        console.error(result.error);
+        setErrorModalMessage(results.error);
       }
+    }
+    loadTasks().catch((err) => {
+      console.error("error loading tasks : ", err);
     });
   }, []);
 
   return (
-    <div className={styles.container}>
+    <div>
       <span className={styles.title}>{title}</span>
-      <div>
+      <div className={styles.itemContainer}>
         {tasks.length === 0 ? (
-          <p className={styles.emptyMessage}>No tasks yet. Create one above!</p>
+          <p>No tasks yet. Add one above to get started.</p>
         ) : (
-          tasks.map((task) => <TaskItem key={task._id} task={task} />)
+          <ul className={styles.itemContainer}>
+            {tasks.map((task) => (
+              <li key={task._id} className={styles.item}>
+                {" "}
+                <TaskItem task={task} />{" "}
+              </li>
+            ))}
+          </ul>
         )}
       </div>
+      <Dialog
+        styleVersion="styled"
+        variant="error"
+        title="An error occurred"
+        // Override the text color so it doesn't show white text on a white background
+        content={<p className={styles.errorModalText}>{errorModalMessage}</p>}
+        isOpen={errorModalMessage !== null}
+        onClose={() => setErrorModalMessage(null)}
+      />
+      ;
     </div>
   );
 }

@@ -16,6 +16,8 @@
   justify-content: center;
   align-items: flex-start;
   overflow: hidden;
+  text-decoration: none; /* Removes the underline */
+  color: inherit; /* Keeps your text black/gray instead of turning blue */
 }
 
 .textContainer span {

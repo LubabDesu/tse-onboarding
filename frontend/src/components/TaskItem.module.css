@@ -38,3 +38,9 @@
 .checked {
   color: var(--color-text-secondary);
 }
+
+.userTag {
+  width: 12rem; /* 192px fixed width */
+  flex-shrink: 0; /* Critical: Prevents the tag from getting squished by long titles */
+  margin-left: 1rem; /* Adds a little breathing room between the title and the tag */
+}

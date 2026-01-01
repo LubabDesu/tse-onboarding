@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getTask } from "src/api/tasks";
-import { Page } from "src/components";
+import { Page, UserTag, TaskForm } from "src/components";
 
 import styles from "./TaskDetail.module.css";
 
 import type { Task } from "src/api/tasks";
 
 export function TaskDetail() {
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+
   const formatDate = (dateString: Date) => {
     return new Intl.DateTimeFormat("en-US", {
       dateStyle: "full",
@@ -38,6 +40,21 @@ export function TaskDetail() {
       </Page>
     ); // Handle the "null" state while fetching
   }
+
+  if (isEditing) {
+    return (
+      <Page>
+        <TaskForm
+          mode="edit"
+          task={task}
+          onSubmit={(updatedTask) => {
+            setTask(updatedTask); // Update the local state with the new data
+            setIsEditing(false); // Switch back to "View Mode"
+          }}
+        />
+      </Page>
+    );
+  }
   return (
     <Page>
       <title>Task Detail</title> {/* Title HTML tag as requested */}
@@ -49,9 +66,9 @@ export function TaskDetail() {
         <div className={styles.header}>
           <h1 className={styles.title}>{task.title}</h1>
           {/* "Edit task" button */}
-          <Link to={`/task/${id}/edit`} className={styles.editButton}>
+          <button type="button" className={styles.editButton} onClick={() => setIsEditing(true)}>
             Edit task
-          </Link>
+          </button>
         </div>
 
         <div className={styles.infoContainer}>
@@ -67,7 +84,7 @@ export function TaskDetail() {
           <div className={styles.infoRow}>
             <span className={styles.label}>Assignee</span>
             <div className={styles.value}>
-              {task.assignee ? task.assignee : <em>Unassigned</em>}
+              <UserTag userName={task.assignee.name} />
             </div>
           </div>
 

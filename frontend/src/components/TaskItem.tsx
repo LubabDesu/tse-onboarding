@@ -2,7 +2,7 @@ import { Dialog } from "@tritonse/tse-constellation";
 import React, { useState, useEffect } from "react"; // update this line
 import { Link } from "react-router-dom";
 import { updateTask } from "src/api/tasks";
-import { CheckButton } from "src/components";
+import { CheckButton, UserTag } from "src/components";
 import styles from "src/components/TaskItem.module.css";
 
 import type { Task } from "src/api/tasks";
@@ -58,6 +58,7 @@ export function TaskItem({ task: initialTask }: TaskItemProps) {
         onClose={() => setError(null)}
         content={<p>{error}</p>}
       />
+      <UserTag userName={task.assignee} className={styles.userTag} />
     </div>
   );
 }

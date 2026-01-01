@@ -1,6 +1,6 @@
 import { Dialog } from "@tritonse/tse-constellation";
 import { useState } from "react";
-import { createTask } from "src/api/tasks";
+import { createTask, updateTask } from "src/api/tasks";
 import { Button, TextField } from "src/components";
 import styles from "src/components/TaskForm.module.css";
 
@@ -41,6 +41,7 @@ type TaskFormErrors = {
 export function TaskForm({ mode, task, onSubmit }: TaskFormProps) {
   const [title, setTitle] = useState<string>(task?.title || "");
   const [description, setDescription] = useState<string>(task?.description || "");
+  const [assignee, setAssignee] = useState<string>(task?.assignee || "");
   const [isLoading, setLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<TaskFormErrors>({});
 
@@ -57,12 +58,29 @@ export function TaskForm({ mode, task, onSubmit }: TaskFormProps) {
       return;
     }
     setLoading(true);
-    createTask({ title, description })
+
+    const assigneeId = assignee === "" ? undefined : assignee;
+
+    let request;
+    if (mode === "create") {
+      request = createTask({ title, description, assignee });
+    } else {
+      request = updateTask({
+        _id: task!._id,
+        title,
+        description,
+        assignee: assigneeId,
+        isChecked: task!.isChecked,
+        dateCreated: task!.dateCreated,
+      });
+    }
+    request
       .then((result) => {
         if (result.success) {
           // clear the form
           setTitle("");
           setDescription("");
+          setAssignee("");
           // only call onSubmit if it's NOT undefined
           if (onSubmit) onSubmit(result.data);
         } else {
@@ -107,6 +125,13 @@ export function TaskForm({ mode, task, onSubmit }: TaskFormProps) {
           label="Description (optional)"
           value={description}
           onChange={(event) => setDescription(event.target.value)}
+        />
+        <TextField
+          className={`${styles.textField} ${styles.stretch}`}
+          data-testid="task-assignee-id"
+          label="Assignee ID (optional)"
+          value={assignee}
+          onChange={(event) => setAssignee(event.target.value)}
         />
         {/* set `type="primary"` on the button so the browser doesn't try to
         handle it specially (because it's inside a `<form>`) */}

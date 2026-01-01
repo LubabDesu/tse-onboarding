@@ -1,0 +1,24 @@
+/* Update your avatar style to handle an <img> tag */
+.avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%; /* Makes the square image a circle */
+  object-fit: cover; /* Ensures image doesn't stretch weirdly */
+}
+
+/* The rest of your styles from the previous step remain the same */
+.container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userName {
+  font-weight: 500;
+  /* Add other font styles here */
+}
+
+.notAssigned {
+  color: var(--color-text-secondary);
+  font-style: italic;
+}

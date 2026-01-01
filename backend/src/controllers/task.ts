@@ -4,6 +4,7 @@
 
 import { validationResult } from "express-validator";
 import createHttpError from "http-errors";
+import { StringExpression } from "mongoose";
 import TaskModel from "src/models/task";
 import validationErrorParser from "src/util/validationErrorParser";
 
@@ -31,7 +32,7 @@ export const getTask: RequestHandler = async (req, res, next) => {
 
   try {
     // if the ID doesn't exist, then findById returns null
-    const task = await TaskModel.findById(id);
+    const task = await TaskModel.findById(id).populate("assignee");
 
     if (task === null) {
       throw createHttpError(404, "Task not found.");
@@ -53,18 +54,13 @@ type CreateTaskBody = {
   title: string;
   description?: string;
   isChecked?: boolean;
-};
-
-type UpdateTaskBody = {
-  title: string;
-  description?: string;
-  isChecked?: boolean;
+  assignee?: string;
 };
 
 export const createTask: RequestHandler = async (req, res, next) => {
   // extract any errors that were found by the validator
   const errors = validationResult(req);
-  const { title, description, isChecked } = req.body as CreateTaskBody;
+  const { title, description, isChecked, assignee } = req.body as CreateTaskBody;
 
   try {
     // if there are errors, then this function throws an exception
@@ -74,9 +70,11 @@ export const createTask: RequestHandler = async (req, res, next) => {
       title,
       description,
       isChecked,
+      assignee,
       dateCreated: Date.now(),
     });
 
+    await task.populate("assignee");
     // 201 means a new resource has been created successfully
     // the newly created task is sent back to the user
     res.status(201).json(task);
@@ -97,24 +95,40 @@ export const removeTask: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const updateTask: RequestHandler = async (req, res, next) => {
-  const errors = validationResult(req);
-  const { title, description, isChecked } = req.body as UpdateTaskBody;
-  const { id } = req.params;
+export const getAllTasks: RequestHandler = async (req, res, next) => {
   try {
-    // your code here
-    validationErrorParser(errors);
-    const task = await TaskModel.findByIdAndUpdate(
-      id,
-      { title, description, isChecked },
-      { new: true, runValidators: true },
-    );
-
-    if (task === null) {
-      throw createHttpError(404, "Task not found.");
-    }
-    res.status(200).json(task);
+    const tasks = await TaskModel.find().sort({ dateCreated: -1 }).populate("assignee");
+    res.status(200).json(tasks);
   } catch (error) {
+    next(error);
+  }
+};
+
+type UpdateTaskBody = {
+  title: string;
+  description?: string;
+  isChecked?: boolean;
+  assignee?: string;
+};
+
+export const updateTask: RequestHandler = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const { title, description, isChecked, assignee } = req.body as UpdateTaskBody;
+
+    const updatedTask = await TaskModel.findByIdAndUpdate(
+      id,
+      { title, description, isChecked, assignee },
+      { new: true },
+    ).populate("assignee");
+
+    if (!updatedTask) {
+      throw createHttpError(404, "Task not found");
+    }
+
+    res.status(200).json(updatedTask);
+  } catch (error) {
+    // This block is required to resolve the "catch expected" error
     next(error);
   }
 };

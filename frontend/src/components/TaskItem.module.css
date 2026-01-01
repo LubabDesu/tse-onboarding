@@ -16,6 +16,8 @@
   justify-content: center;
   align-items: flex-start;
   overflow: hidden;
+  text-decoration: none; /* Removes the underline */
+  color: inherit; /* Keeps your text black/gray instead of turning blue */
 }
 
 .textContainer span {
@@ -35,4 +37,10 @@
 
 .checked {
   color: var(--color-text-secondary);
+}
+
+.userTag {
+  width: 12rem; /* 192px fixed width */
+  flex-shrink: 0; /* Critical: Prevents the tag from getting squished by long titles */
+  margin-left: 1rem; /* Adds a little breathing room between the title and the tag */
 }

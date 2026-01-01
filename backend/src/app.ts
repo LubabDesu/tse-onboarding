@@ -7,6 +7,7 @@ import cors from "cors";
 import express from "express";
 import { isHttpError } from "http-errors";
 import taskRoutes from "src/routes/task";
+import userRoutes from "src/routes/user";
 import tasksRoutes from "src/routes/tasks";
 
 import type { NextFunction, Request, Response } from "express";
@@ -28,6 +29,7 @@ app.use(
 );
 
 app.use("/api/task", taskRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/tasks", tasksRoutes);
 
 /**
